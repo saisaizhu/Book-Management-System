@@ -14,4 +14,12 @@
         id, name, status
     </sql>
 
+    <select id="pageC" resultType="com.example.demo.entity.books">
+        select * from books
+    </select>
+
+    <select id="pageCC" resultType="com.example.demo.entity.books">
+        select * from books ${ew.customSqlSegment}
+    </select>
+
 </mapper>
