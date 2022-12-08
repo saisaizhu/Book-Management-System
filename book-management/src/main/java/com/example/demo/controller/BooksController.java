@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.QueryPage;
+import com.example.demo.common.Result;
 import com.example.demo.entity.books;
 import com.example.demo.service.IBooksService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class BooksController {
 
         HashMap param=query.getParam();
         String name=String.valueOf(param.get("name"));
+        String author=String.valueOf(param.get("author"));
         //System.out.println("id="+String.valueOf(param.get("id")));
 
         //System.out.println(map);
@@ -88,6 +90,7 @@ public class BooksController {
 
         LambdaQueryWrapper<books> lambdaQueryWrapper=new LambdaQueryWrapper();
         lambdaQueryWrapper.like(books::getName,name);
+        //lambdaQueryWrapper.like(books::getAuthor,author);
 
         IPage result=bookService.page(page,lambdaQueryWrapper);
         System.out.println("total=="+result.getTotal());
@@ -119,5 +122,31 @@ public class BooksController {
         System.out.println("total=="+result.getTotal());
 
         return result.getRecords();
+    }
+
+    @PostMapping("/listPageC1")
+    public Result listPageC1(@RequestBody QueryPage query){
+        //System.out.println(query);
+
+        System.out.println("num="+query.getPageNum());
+        System.out.println("size="+query.getPageSize());
+
+        HashMap param=query.getParam();
+        String name=String.valueOf(param.get("name"));
+        //分页
+        Page<books> page=new Page<>();
+        page.setCurrent(query.getPageNum());//当前页
+        page.setSize(query.getPageSize());//每页多少条
+
+        LambdaQueryWrapper<books> lambdaQueryWrapper=new LambdaQueryWrapper();
+        lambdaQueryWrapper.like(books::getName,name);
+
+        //分页的mapper
+        //IPage result=bookService.pageC(page);
+        //sql自定义映射
+        IPage result=bookService.pageCC(page,lambdaQueryWrapper);
+        System.out.println("total=="+result.getTotal());
+
+        return Result.suc(result.getRecords(), result.getTotal());
     }
 }

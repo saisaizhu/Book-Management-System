@@ -26,5 +26,14 @@ public class books implements Serializable {
 
     private String status;
 
+    private Integer number;
+
+    private String author;
+
+    private Integer value;
+
+    private String language;
+
+    private String category;
 
 }
